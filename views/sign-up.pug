@@ -24,28 +24,60 @@ html
                             input(type="text", class="form-control", name="fname", value=fname, required)
                         else
                             input(type="text", class="form-control", name="fname", required)            
+                    
                     div(class="form-group")
                         label(for="uname") Username:
                         if uname
                             input(type="text", class="form-control", name="uname", value=uname, required)
                         else
                             input(type="text", class="form-control", name="uname", required)
+                    
                     div(class="form-group")
                         label(for="email") Email:
                         if email
                             input(type="email", class="form-control", name="email", value=email, required)
                         else
                             input(type="email", class="form-control", name="email", required)                    
+                    
                     div(class="form-group")
                         label(for="pwd") Password:
                         input(type="password", class="form-control", name="pwd", required)
                     div(class="form-group")
                         label(for="cpwd") Re-enter password:
                         input(type="password", class="form-control", name="cpwd", required)
+                    
                     div(class="form-group")
                         label(for="hint") Password recovery hint:
                         if hint
                             input(type="text", class="form-control", name="hint", value=hint, required)
                         else
-                            input(type="text", class="form-control", name="hint", required)                                         
+                            input(type="text", class="form-control", name="hint", required)
+                    
+                    div(class="form-group")
+                        label(for="address") Address:
+                        if address
+                            input(type="text", class="form-control", name="address", value=address, required)
+                        else
+                            input(type="text", class="form-control", name="address", required)
+                                                                     
+                    div(class="form-group")
+                        label(for="state") State:
+                        if state
+                            input(type="text", class="form-control", name="state", value=state, required)
+                        else
+                            input(type="text", class="form-control", name="state", required)
+
+                    div(class="form-group")
+                        label(for="pincode") Pincode:
+                        if pincode
+                            input(type="text", class="form-control", name="pincode", value=pincode, required)
+                        else
+                            input(type="text", class="form-control", name="pincode", required)
+
+                    div(class="form-group")
+                        div(class="radio-inline")
+                            label(for="acc_type") #[input(type="radio", name="acc_type", value="customer", checked)] Customer  
+                        div(class="radio-inline")     
+                            label(for="acc_type") #[input(type="radio", name="acc_type", value="trader")] Trader
+
                     button(type="submit", class="btn btn-success", style="text-decoration:none;") Sign up        

@@ -1,7 +1,7 @@
 doctype html
 html
     head(lang='en-US')
-        title E-cart
+        title Phone-bay
         meta(charset='utf-8')
         meta(name='viewport', content='width=device-width', initial-scale=1.0)
         script(src='https://code.jquery.com/jquery-3.4.1.slim.min.js', integrity='sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n', crossorigin='anonymous')
@@ -13,11 +13,8 @@ html
         br  
         div(class="container", style="width: 25rem;margin-top:50px;")
             div(class="jumbotron")
-                h1 Welcome to E-cart
-                p Easily find products you love and also become a seller!
-                if msg
-                    div(class="alert alert-success") #{msg}
-                    br                 
+                h1 Welcome to Phone-bay
+                p Buy phones at the best price!
                 div(class="text-center")
                     a(href="/sign-in", type="button", class="btn btn-info", style="text-decoration:none;") Sign in
                     a(href="/sign-up", class="btn btn-success", style="text-decoration:none;") Sign up

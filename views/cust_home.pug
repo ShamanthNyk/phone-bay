@@ -1,0 +1,43 @@
+doctype html
+html
+    head(lang='en-US')
+        title #{user_data.uname}    
+        meta(charset='utf-8')
+        meta(name='viewport', content='width=device-width', initial-scale=1.0)        
+        link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css")
+        script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js")
+        script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js")        
+    body
+        nav(class="navbar navbar-inverse")
+            div(class="container-fluid")
+                div(class="navbar-header")
+                    a(class="navbar-brand", href="#") #[strong #{user_data.uname}]
+                ul(class="nav navbar-nav")
+                    li(id="home-btn", class="active") #[a(href="#") #[strong Home]]
+                    li(id="cart-btn") #[a(href="#") #[strong Cart]]
+                    li(id="track-btn") #[a(href="#") #[strong Track]]
+                    li(id="logs-btn") #[a(href="#") #[strong Logs]] 
+                form(class="navbar-form navbar-left", action="/action")
+                    div(class="form-group")
+                        input(type="text", class="form-control", placeholder="Search")
+                    button(type="submit", class="btn btn-default")
+                        i(class="glyphicon glyphicon-search")
+                ul(class="nav navbar-nav navbar-right")
+                    li #[a(href="/sign-out") #[span(class="glyphicon glyphicon-log-out")] Sign out]
+
+        div(class="container-fluid", style="background-color:black;")
+            div(class="jumbotron", style="background-color:black;")
+                h1(style="color:white;") Top products        
+
+        form(action="/view-product" method="POST")
+            div(class="product-list")        
+                each product in products       
+                    div(class="product-card")
+                        img(src=product.pimg)
+                        h3 #[strong #{product.name}] 
+                        p(class="product-price") #[strong #{product.price} $]
+                        p #[button(name="item", value=product.pid, type="submit") View]
+                
+        hr
+        script(src='../utils/cust_home.js')
+        link(href='../public/css/product.css', rel='stylesheet', type='text/css') 

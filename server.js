@@ -6,8 +6,6 @@ const cookieParser = require('cookie-parser');
 const mysql = require('mysql');
 const bodyParser = require('body-parser');
 const session = require('express-session');
-const pug = require('pug');
-const db = require('./utils/db');
 const app = express();
 
 app.set('views', path.join(__dirname, 'views'));
@@ -16,15 +14,10 @@ app.set('view engine', 'pug');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, '/'))); 
-// setting reference directory for assets and static files
+app.use(express.static(path.join(__dirname, '/')));  // setting reference directory for assets and static files
 
-// setup connection to database
-const con = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "Viggi@2000",
-    database: "E_CART"
+app.listen(PORT, '127.0.0.1', function () {
+    console.log('Listening on ' + PORT);
 });
 
 // handle session
@@ -35,96 +28,82 @@ app.use(session({
     cookie: {secure: false}
 }));
 
-con.connect(function (err) {
-    if (err)
-        throw err;
-    console.log("Database connected");    
-});
+const auth = require('./utils/auth');
+const cust = require('./utils/cust_routes');
+const trader = require('./utils/trader_routes');
 
-app.listen(PORT, function () {
-    console.log('Listening on ' + PORT);
-});
+/* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Authentication and Registration @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
 
 app.get('/', function(req, res) {
-    res.render('index', {error: null});
+    res.render('index');
 });
 
-app.get('/sign-in', function(req, res) {
-    res.render('sign-in', {error: null});
-});
+app.get('/sign-in', auth.sign_in);
+app.get('/sign-up', auth.sign_up);
+app.post('/register', auth.register);
+app.get('/sign-out', auth.sign_out);
+app.post('/verify', auth.verify);
+app.get('/home-customer', cust.home);
+app.get('/home-trader', trader.home);
+app.get('/add', trader.add);
 
-app.get('/sign-up', function(req, res) {
-    res.render('sign-up', {error: null});
-});
+/* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
 
-app.post('/register', function(req, res) {
-    if(req.body.uname.length < 4 || req.body.pwd.length < 8 || req.body.pwd.fname < 2) {
-        res.render('sign-up', {
-            error: "Minimum length of username, fullname and password is 5, 2 and 9 respectively",
-            uname: req.body.uname,
-            fname: req.body.fname,
-            email: req.body.email,
-            hint: req.body.hint
-        });
-    } else if(req.body.pwd.localeCompare(req.body.cpwd) != 0) {
-        res.render('sign-up', {
-            error: "Passowrd doesn't seem to match",
-            uname: req.body.uname,
-            fname: req.body.fname,
-            email: req.body.email,
-            hint: req.body.hint
-        });        
-    } else {
-        con.query(db.CHECK_FOR_DUPLICATE_USERNAME, [req.body.uname],
-            function (err, result, fields) {
-                if (err)
-                    console.log(err);
-                if(Number(result[0].IS_PRESENT) == 1) {
-                    res.render('sign-up', {
-                        error: "User with same username already exists!",
-                        uname: req.body.uname,
-                        fname: req.body.fname,
-                        email: req.body.email,
-                        hint: req.body.hint
-                    });                
-                } else if(Number(result[0].IS_PRESENT) == 0) {
-                    con.query(db.ADD_NEW_USER,
-                        [   req.body.uname, 
-                            req.body.pwd,
-                            req.body.fname,
-                            req.body.email,
-                            req.body.hint],
-                        function (err, result, fields) {
-                            if (err) {
-                                console.log(err);
-                            }
-                            res.render('index', {msg: "Account created successfully"});
-                    });                                 
-                }
-        });        
-    }     
-});
+// app.post('/process-new-product', function(req, res, next) {
+//     con.query(
+//         db.INSERT_NEW_PRODUCT, 
+//         [req.body.pid, 
+//         req.body.name,
+//         req.body.price,
+//         req.body.ram,
+//         req.body.iStorage,
+//         req.body.display,
+//         req.body.battery,
+//         req.body.OS,
+//         req.body.camera,
+//         req.body.warranty,
+//         req.body.pimg
+//         ],
+//         function (err, result, fields) {
+//             if (err) {
+//                 res.render('add', {error: err});               
+//                 console.log(err);
+//             } else {
+//                 res.render('add', {msg: "Success"});
+//             }    
+                
+//     });     
+// });
 
-app.post('/auth', function(req, res) {
-    con.query(
-        db.AUTHENTICATE_USER_ACCESS, 
-        [req.body.uname, req.body.pwd],
-        function (err, result, fields) {
-            if (err)
-                throw err;
-            if(result[0] != undefined) {
-                req.session.uname = req.body.uname;  
-                res.render('home', {uname: result[0].username, name: result[0].fullname});
-                console.log(req.session.uname + ' has signed in');
-            } else {
-                res.render('sign-in', {error: "Invalid username or password"});
-                console.log('sign-in request failed');
-            }    
-    });      
-});
+// app.post('/view-product', function(req, res, next) {
+//     req.session.cur_product_id = req.body.item;
+//     con.query(
+//         db.GET_FULL_PRODUCT_INFO, 
+//         [req.body.item],
+//         function (err, result, fields) {
+//             if (err) {
+//                 throw err;
+//             }
+//             res.render('view-product', {
+//                 pid: result[0].pid,
+//                 name: result[0].name,
+//                 price: result[0].price,
+//                 pimg: result[0].pimg,
+//                 ram: result[0].ram,
+//                 iStorage: result[0].iStorage,
+//                 display: result[0].display,
+//                 battery: result[0].battery,
+//                 os: result[0].os,
+//                 camera: result[0].camera,
+//                 warranty: result[0].warranty
+//             });    
+//     });     
+// });
 
-app.get('/sign-out', function(req, res) {
-    console.log(req.session.uname + ' signed out ');
-    req.session = null;
-    res.render('index', {msg: "Logged out"});
-});
+// app.post('/order-action', function(req, res, err) {
+//     if(req.body.action.localeCompare("add-to-cart")) {
+        
+//     } else {
+
+//     }
+// });

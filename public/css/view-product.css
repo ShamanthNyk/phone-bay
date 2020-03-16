@@ -1,0 +1,14 @@
+
+.info-block {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    padding-left: 60%;
+    margin: 50px 50px 50px 50px;
+}
+
+.img-block {
+    position: absolute;
+    padding-right: 10%;
+    margin-bottom: 25%;
+    height: 460px;
+    width: 620px;
+}

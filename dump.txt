@@ -1,0 +1,177 @@
+exports.register = function(req, res) {
+    if(req.body.uname.length < 4) {
+        res.render('sign-up', {
+            error: "Minimum length of username is 4",
+            uname: req.body.uname,
+            fname: req.body.fname,
+            email: req.body.email,
+            hint: req.body.hint,
+            pincode: req.body.pincode,
+            address: req.body.address,
+            state: req.body.state
+        });
+    } else if(req.body.pwd.length < 8) {
+        res.render('sign-up', {
+            error: "Minimum length of password is 8",
+            uname: req.body.uname,
+            fname: req.body.fname,
+            email: req.body.email,
+            hint: req.body.hint,
+            pincode: req.body.pincode,
+            address: req.body.address,
+            state: req.body.state
+        });
+    } else if(req.body.pwd.fname < 2) {
+        res.render('sign-up', {
+            error: "Minimum length of fullname 2",
+            uname: req.body.uname,
+            fname: req.body.fname,
+            email: req.body.email,
+            hint: req.body.hint,
+            pincode: req.body.pincode,
+            address: req.body.address,
+            state: req.body.state
+        });
+    } else if(req.body.pwd.hint < 1) {
+        res.render('sign-up', {
+            error: "Minimum length of hint 1",
+            uname: req.body.uname,
+            fname: req.body.fname,
+            email: req.body.email,
+            hint: req.body.hint,
+            pincode: req.body.pincode,
+            address: req.body.address,
+            state: req.body.state
+        });
+    } else if(req.body.pwd.address < 15) {
+        res.render('sign-up', {
+            error: "Minimum length of address 15",
+            uname: req.body.uname,
+            fname: req.body.fname,
+            email: req.body.email,
+            hint: req.body.hint,
+            pincode: req.body.pincode,
+            address: req.body.address,
+            state: req.body.state
+        });
+    } else if(req.body.pwd.pincode != 6 ) {
+        res.render('sign-up', {
+            error: "Length of pincode should be 6",
+            uname: req.body.uname,
+            fname: req.body.fname,
+            email: req.body.email,
+            hint: req.body.hint,
+            pincode: req.body.pincode,
+            address: req.body.address,
+            state: req.body.state
+        });
+    } else if(req.body.pwd.localeCompare(req.body.cpwd) != 0) {
+        res.render('sign-up', {
+            error: "Passowrd doesn't seem to match",
+            uname: req.body.uname,
+            fname: req.body.fname,
+            email: req.body.email,
+            hint: req.body.hint,
+            pincode: req.body.pincode,
+            address: req.body.address,
+            state: req.body.state
+        });        
+    } else {
+        con.query(db.CHECK_FOR_DUPLICATE_USERNAME, [req.body.uname],
+            function (err, result, fields) {
+                if (err)
+                    console.log(err);
+                if(Number(result[0].IS_PRESENT) == 1) {
+                    res.render('sign-up', {
+                        error: "User with same username already exists!",
+                        uname: req.body.uname,
+                        fname: req.body.fname,
+                        email: req.body.email,
+                        hint: req.body.hint,
+                        pincode: req.body.pincode,
+                        address: req.body.address,
+                        state: req.body.state
+                    });                
+                } else if(Number(result[0].IS_PRESENT) == 0) {
+                    con.query(db.ADD_NEW_USER,
+                        [   req.body.uname, 
+                            req.body.pwd,
+                            req.body.fname,
+                            req.body.email,
+                            req.body.hint,
+                            req.body.pincode,
+                            req.body.address,
+                            req.body.state                            
+                        ],
+                        function (err, result, fields) {
+                            if (err) {
+                                console.log(err);
+                            }
+                            res.render('index', {msg: "Account created successfully"});
+                    });                                 
+                }
+        });        
+    }     
+}
+
+exports.sign_in =  function(req, res) {
+    res.render('sign-in', {error: null});
+};
+
+exports.sign_up = function(req, res) {
+    res.render('sign-up', {error: null});
+};
+
+exports.sign_out = function(req, res, next) {
+    console.log(req.session.uname + ' signed out ');
+    if (req.session) {
+      req.session.destroy(function(err) {
+        if(err) {
+          return next(err);
+        } else {
+            res.render('index', {msg: "Logged out"});
+        }
+      });
+    }
+};
+
+exports.verify = function(req, res) {
+    if(req.session) {
+        con.query(
+            db.AUTHENTICATE_USER_ACCESS, 
+            [req.body.uname, req.body.pwd],
+            function (err, result, fields) {
+                if (err)
+                    throw err;
+                if(result[0] != undefined) {
+                    req.session.uname = req.body.uname;
+                    var user_data = {uname: result[0].username, name: result[0].fullname};
+                    var products = [];  
+                    con.query(
+                        db.GET_BASIC_PRODUCT_INFO, 
+                        function (err, result, fields) {
+                            if (err) {
+                                throw err;
+                            }
+                            for (var i = 0;i < result.length; i++) {
+                                products.push({
+                                    pid: result[i].pid,
+                                    name: result[i].name,
+                                    price: result[i].price,
+                                    pimg: result[i].pimg
+                                });
+                                if(i == result.length - 1) {
+                                    res.render('home', {user_data: user_data, products: products});
+                                }
+                            }                            
+                    });                         
+                    console.log(req.session.uname + ' has signed in');
+                } else {
+                    res.render('sign-in', {error: "Invalid username or password"});
+                    console.log('sign-in request failed');
+                }    
+        });        
+    } else {
+        res.status(404).render('404.pug');
+    }      
+};

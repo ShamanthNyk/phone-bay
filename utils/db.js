@@ -1,29 +1,13 @@
 "use strict";
 
-exports.CREATE_USER_TABLE = 
-    `CREATE TABLE USERS (
-        username varchar(100) PRIMARY KEY,
-        password varchar(160) NOT NULL,
-        fullname varchar(100) NOT NULL,
-        email varchar(100) NOT NULL,
-        hint varchar(100) NOT NULL)`;
-
 exports.ADD_NEW_USER =
-    `INSERT INTO USERS VALUES(?,SHA1(?),?,?,?)`;
+    `CALL ADD_NEW_USER(?,?,?,?,?,?,?,?,?)`;    
     
-exports.CHECK_FOR_DUPLICATE_USERNAME = 
-    `SELECT COUNT(*) AS IS_PRESENT
-     FROM USERS 
-     WHERE username=?`;
+exports.CHECK_FOR_DUPLICATE_USER =
+    'SET @found = 0; CALL CHECK_FOR_DUPLICATE_USER(?,?,@found); SELECT @found as found';
 
-exports.AUTHENTICATE_USER_ACCESS = 
-    `SELECT username, fullname
-     FROM USERS 
-     WHERE username=? AND password=SHA1(?)`;
-    
+exports.LOGIN_VERIFICATION =
+    `SET @found = 0; CALL LOGIN_VERIFICATION(?,?,?,@found); SELECT @found as found`;    
 
 
     
-    
-
-
