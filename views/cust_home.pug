@@ -34,7 +34,7 @@ html
                 each product in products       
                     div(class="product-card")
                         img(src=product.pimg)
-                        h3 #[strong #{product.name}] 
+                        h3 #[strong #{product.title}] 
                         p(class="product-price") #[strong #{product.price} $]
                         p #[button(name="item", value=product.pid, type="submit") View]
                 

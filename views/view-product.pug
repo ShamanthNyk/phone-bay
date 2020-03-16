@@ -10,10 +10,11 @@ html
         script(src='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js', integrity='sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6', crossorigin='anonymous')
         body
             div(class="jumbotron")
-                form(action="order-action", method="POST")
+                form(action="add-to-cart", method="POST")
                     img(src=pimg, class="img-block")
                     div(class="info-block")                                    
                         h4 Model name: #{name}
+                        h4 Brand: #{brand}
                         h4 Price: #{price} $
                         h4 RAM: #{ram} GB
                         h4 Internal storage: #{iStorage} GB
@@ -22,7 +23,6 @@ html
                         h4 Operating System: #{os}
                         h4 Camera: #{camera} MP
                         h4 Warranty: #{warranty} years
-                        button(type="submit", name="action", value="add-to-cart", class="btn btn-warning") Add to Cart
-                        button(type="submit", name="action", value="buy-now", class="btn btn-primary") Buy now  
+                        button(type="submit", class="btn btn-warning") Add to Cart  
         link(href='../public/css/view-product.css', rel='stylesheet', type='text/css')                 
                 

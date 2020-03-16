@@ -46,6 +46,8 @@ app.post('/verify', auth.verify);
 app.get('/home-customer', cust.home);
 app.get('/home-trader', trader.home);
 app.get('/add', trader.add);
+app.post('/view-product', cust.view_product);
+app.get('/process-new-product', trader.process_new_product);
 
 /* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
 
@@ -75,35 +77,3 @@ app.get('/add', trader.add);
 //     });     
 // });
 
-// app.post('/view-product', function(req, res, next) {
-//     req.session.cur_product_id = req.body.item;
-//     con.query(
-//         db.GET_FULL_PRODUCT_INFO, 
-//         [req.body.item],
-//         function (err, result, fields) {
-//             if (err) {
-//                 throw err;
-//             }
-//             res.render('view-product', {
-//                 pid: result[0].pid,
-//                 name: result[0].name,
-//                 price: result[0].price,
-//                 pimg: result[0].pimg,
-//                 ram: result[0].ram,
-//                 iStorage: result[0].iStorage,
-//                 display: result[0].display,
-//                 battery: result[0].battery,
-//                 os: result[0].os,
-//                 camera: result[0].camera,
-//                 warranty: result[0].warranty
-//             });    
-//     });     
-// });
-
-// app.post('/order-action', function(req, res, err) {
-//     if(req.body.action.localeCompare("add-to-cart")) {
-        
-//     } else {
-
-//     }
-// });

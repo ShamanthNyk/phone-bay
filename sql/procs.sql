@@ -61,3 +61,31 @@ BEGIN
     END IF;            
 END $$ 
 DELIMITER ;
+
+-- insert new product
+DELIMITER $$
+CREATE PROCEDURE INSERT_NEW_PRODUCT(
+    IN title varchar(100), 
+    IN price float,
+    IN ram INT,
+    IN iStorage INT,
+    IN display float,
+    IN battery INT,
+    IN OS varchar(100),
+    IN camera INT,
+    IN warranty INT,
+    IN pimg varchar(8000),
+    IN brand varchar(100),
+    IN uname varchar(100) 
+    )
+BEGIN
+    DECLARE _trader_id INT DEFAULT 0;
+    SELECT trader_id INTO _trader_id
+    FROM PERSON P, TRADER T
+    WHERE P._id=T._id AND P.username=uname;
+    IF _trader_id <> 0 THEN
+        INSERT INTO PRODUCT(trader_id,title,price,ram,iStorage,display,battery,OS,camera,warranty,pimg,brand)
+        VALUES(_trader_id,title,price,ram,iStorage,display,battery,OS,camera,warranty,pimg,brand);
+    END IF;    
+END $$ 
+DELIMITER ;

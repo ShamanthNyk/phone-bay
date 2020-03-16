@@ -14,9 +14,12 @@ html
         div(class="container", style="width: 25rem;margin-top:50px;")
             div(class="jumbotron") 
                 h1 Sign in
-                if msg
+                if error
                     div(class="alert alert-danger") #{msg}
-                    br                             
+                    br
+                if msg
+                    div(class="alert alert-success") #{msg}
+                    br                                                 
                 form(action="/verify", method="POST")
                     div(class="form-group")
                         label(for="uname") Username:

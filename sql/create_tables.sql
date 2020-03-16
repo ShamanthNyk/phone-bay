@@ -39,6 +39,7 @@ CREATE TABLE PRODUCT (
     warranty INT NOT NULL,
     pimg varchar(8000) NOT NULL,
     brand varchar(30) NOT NULL,
+    buys INT DEFAULT 0,
     PRIMARY KEY (product_id),
     FOREIGN KEY (trader_id) REFERENCES TRADER (trader_id)
 );
@@ -58,11 +59,13 @@ CREATE TABLE ORDERS (
     order_id INT AUTO_INCREMENT,
     cust_id INT NOT NULL,
     trader_id INT NOT NULL,
+    product_id INT NOT NULL,
     ordamt float NOT NULL,
     odate DATE DEFAULT NULL,
     PRIMARY KEY (order_id),
     FOREIGN KEY (cust_id) REFERENCES CUSTOMER (cust_id) ON DELETE CASCADE,
-    FOREIGN KEY (trader_id) REFERENCES TRADER (trader_id) ON DELETE CASCADE
+    FOREIGN KEY (trader_id) REFERENCES TRADER (trader_id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES PRODUCT (product_id) ON DELETE CASCADE
 );
 
 -- keeps track of all users activity
@@ -79,7 +82,7 @@ CREATE TABLE LOGS (
 
 -- seller will decide the wareshouse which will deliver it to the customers. 
 
-CREATE TABLE WARESHOUSE (
+CREATE TABLE WAREHOUSE (
     warehouse INT,
     city varchar(20) NOT NULL,
     PRIMARY KEY (warehouse)
@@ -92,5 +95,19 @@ CREATE TABLE SHIPMENT (
     shipped varchar(3) DEFAULT 'NO',
     PRIMARY KEY (order_id),
     FOREIGN KEY (order_id) REFERENCES ORDERS (order_id),
-    FOREIGN KEY (warehouse) REFERENCES WARESHOUSE (warehouse)
+    FOREIGN KEY (warehouse) REFERENCES WAREHOUSE (warehouse)
 );
+
+DELETE FROM SHIPMENT;
+DELETE FROM WAREHOSUE;
+DELETE FROM LOGS;
+DELETE FROM ORDERS;
+DELETE FROM CART;
+DELETE FROM PRODUCT;
+
+DROP TABLE SHIPMENT;
+DROP TABLE  WAREHOUSE;
+DROP TABLE LOGS;
+DROP TABLE ORDERS;
+DROP TABLE CART;
+DROP TABLE PRODUCT;

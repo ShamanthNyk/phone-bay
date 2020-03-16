@@ -39,7 +39,7 @@ exports.add =function(req, res, next) {
 exports.process_new_product = function(req, res, next) {
     con.query(
         db.INSERT_NEW_PRODUCT, 
-        [req.body.name,
+        [req.body.title,
         req.body.price,
         req.body.ram,
         req.body.iStorage,
@@ -49,15 +49,14 @@ exports.process_new_product = function(req, res, next) {
         req.body.camera,
         req.body.warranty,
         req.body.pimg,
-        req.body.brand
+        req.body.brand,
+        req.session.uname
         ],
         function (err, result, fields) {
             if (err) {
                 res.render('add', {error: err});               
-                console.log(err);
             } else {
                 res.render('add', {msg: "Success"});
             }    
-                
     });     
 };

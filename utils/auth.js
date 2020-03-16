@@ -142,11 +142,11 @@ exports.register = function(req, res) {
 
 exports.sign_in =  function(req, res) {
     if(req.session.signed_up == true)
-    res.render('sign-in', {msg: "Account successfully created"});
+        res.render('sign-in', {msg: "Account successfully created"});
     else if(req.session.authenticated == false)
-        res.render('sign-in', {msg: "Invalid username or password"});
+        res.render('sign-in', {error: "Invalid username or password"});
     else        
-        res.render('sign-in', {msg: null});
+        res.render('sign-in');
 };
 
 exports.sign_up = function(req, res) {
