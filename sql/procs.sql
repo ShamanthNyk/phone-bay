@@ -80,12 +80,107 @@ CREATE PROCEDURE INSERT_NEW_PRODUCT(
     )
 BEGIN
     DECLARE _trader_id INT DEFAULT 0;
-    SELECT trader_id INTO _trader_id
+    SELECT T.trader_id INTO _trader_id
     FROM PERSON P, TRADER T
     WHERE P._id=T._id AND P.username=uname;
     IF _trader_id <> 0 THEN
         INSERT INTO PRODUCT(trader_id,title,price,ram,iStorage,display,battery,OS,camera,warranty,pimg,brand)
         VALUES(_trader_id,title,price,ram,iStorage,display,battery,OS,camera,warranty,pimg,brand);
     END IF;    
+END $$ 
+DELIMITER ;
+
+-- add to cart
+DELIMITER $$
+CREATE PROCEDURE ADD_TO_CART(
+    IN uname varchar(100), 
+    IN _product_id INT
+    )
+BEGIN
+    DECLARE _cust_id INT DEFAULT 0;
+    SELECT C.cust_id INTO _cust_id
+    FROM PERSON P, CUSTOMER C
+    WHERE P._id=C._id AND P.username=uname;
+    IF _cust_id <> 0 THEN
+        INSERT INTO CART(cust_id, product_id) VALUES(_cust_id, _product_id);
+    END IF;
+END $$ 
+DELIMITER ;
+
+-- retrieve cart items for one customer
+DELIMITER $$
+CREATE PROCEDURE GET_CART(
+    IN uname varchar(100)
+    )
+BEGIN
+    DECLARE _cust_id INT DEFAULT 0;
+    SELECT C.cust_id INTO _cust_id
+    FROM PERSON P, CUSTOMER C
+    WHERE P._id=C._id AND P.username=uname;
+    IF _cust_id <> 0 THEN
+        SELECT *
+        FROM CART C, PRODUCT P
+        WHERE P.product_id=C.product_id AND C.cust_id=_cust_id;
+    END IF;
+END $$ 
+DELIMITER ;
+
+-- util which matches username to trader/customer id
+DELIMITER $$
+ 
+CREATE FUNCTION MAP_USERNAME_TO_ID(
+    uname varchar(100),
+    acc_type varchar(10)
+) 
+RETURNS INTEGER
+DETERMINISTIC
+BEGIN
+    DECLARE _cust_id INTEGER;
+    IF acc_type = 'customer' THEN
+        SELECT C.cust_id INTO _cust_id
+        FROM PERSON P, CUSTOMER C
+        WHERE P._id=C._id AND P.username=uname;
+    ELSE 
+        SELECT T.trader_id INTO _cust_id
+        FROM PERSON P, TRADER T
+        WHERE P._id=T._id AND P.username=uname;    
+    END IF;        
+    RETURN (_cust_id);
+END $$
+DELIMITER ;
+
+-- place orders for items in cart
+DELIMITER $$
+CREATE PROCEDURE PLACE_ORDER(
+    IN _cust_id INT
+    )
+BEGIN
+    DECLARE finished INTEGER DEFAULT 0;
+    DECLARE _trader_id INTEGER;
+    DECLARE _product_id INTEGER;
+    DECLARE _price FLOAT;
+    DECLARE _item_no INTEGER;
+    DECLARE items CURSOR FOR (
+        SELECT item_no, product_id
+        FROM CART C
+        WHERE C.cust_id=_cust_id
+    );
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET finished = 1; -- declare NOT FOUND handler
+
+    OPEN items;
+    shift: LOOP
+        FETCH items INTO _item_no, _product_id;
+        IF finished = 1 THEN 
+            LEAVE shift;
+        END IF;
+        SELECT trader_id, price INTO _trader_id, _price 
+        FROM PRODUCT P
+        WHERE P.product_id=_product_id;
+        DELETE FROM CART WHERE item_no=_item_no;
+        INSERT INTO ORDERS(cust_id, trader_id, product_id, ordamt, odate)
+        VALUES(_cust_id, _trader_id, _product_id, _price, SYSDATE());
+    END LOOP shift;
+    CLOSE items;
+
 END $$ 
 DELIMITER ;

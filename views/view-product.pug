@@ -10,7 +10,7 @@ html
         script(src='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js', integrity='sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6', crossorigin='anonymous')
         body
             div(class="jumbotron")
-                form(action="add-to-cart", method="POST")
+                form(action="/add-to-cart", method="GET")
                     img(src=pimg, class="img-block")
                     div(class="info-block")                                    
                         h4 Model name: #{name}

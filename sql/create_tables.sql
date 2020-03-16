@@ -48,9 +48,10 @@ CREATE TABLE PRODUCT (
 -- once he places the order, items from cart is shifted to order table
 
 CREATE TABLE CART (
+    item_no INT AUTO_INCREMENT,
     cust_id INT,
     product_id INT,
-    PRIMARY KEY(cust_id, product_id),
+    PRIMARY KEY(item_no),
     FOREIGN KEY (cust_id) REFERENCES CUSTOMER (cust_id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES PRODUCT (product_id) ON DELETE CASCADE
 );

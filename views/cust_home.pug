@@ -13,10 +13,10 @@ html
                 div(class="navbar-header")
                     a(class="navbar-brand", href="#") #[strong #{user_data.uname}]
                 ul(class="nav navbar-nav")
-                    li(id="home-btn", class="active") #[a(href="#") #[strong Home]]
-                    li(id="cart-btn") #[a(href="#") #[strong Cart]]
-                    li(id="track-btn") #[a(href="#") #[strong Track]]
-                    li(id="logs-btn") #[a(href="#") #[strong Logs]] 
+                    li(id="home-btn", class="active") #[a(href="#home") #[strong Home]]
+                    li(id="cart-btn") #[a(href="#cart") #[strong Cart]]
+                    li(id="track-btn") #[a(href="#track") #[strong Track]]
+                    li(id="logs-btn") #[a(href="#logs") #[strong Logs]] 
                 form(class="navbar-form navbar-left", action="/action")
                     div(class="form-group")
                         input(type="text", class="form-control", placeholder="Search")
@@ -25,19 +25,58 @@ html
                 ul(class="nav navbar-nav navbar-right")
                     li #[a(href="/sign-out") #[span(class="glyphicon glyphicon-log-out")] Sign out]
 
-        div(class="container-fluid", style="background-color:black;")
-            div(class="jumbotron", style="background-color:black;")
-                h1(style="color:white;") Top products        
+        div(class="page", id="home-page")
+            div(class="container-fluid", style="background-color:black;")
+                div(class="jumbotron", style="background-color:black;")
+                    h1(style="color:white;") Top products        
 
-        form(action="/view-product" method="POST")
-            div(class="product-list")        
-                each product in products       
-                    div(class="product-card")
-                        img(src=product.pimg)
-                        h3 #[strong #{product.title}] 
-                        p(class="product-price") #[strong #{product.price} $]
-                        p #[button(name="item", value=product.pid, type="submit") View]
-                
+            form(action="/view-product" method="POST")
+                div(class="product-list")        
+                    each product in products       
+                        div(class="product-card")
+                            img(src=product.pimg)
+                            h3 #[strong #{product.title}] 
+                            p(class="product-price") #[strong #{product.price} $]
+                            p #[button(name="item", value=product.pid, type="submit") View]
+
+        div(class="page", id="cart-page", style="display: none;")
+            div(class="container-fluid", style="background-color:black;")
+                div(class="jumbotron", style="background-color:black;")
+                    h1(style="color:white;") Cart        
+
+            if cart.length > 0
+                form(action="/remove-from-cart" method="POST")
+                    div(class="cart-list")
+                        each c in cart       
+                            div(class="cart-card")
+                                img(src=c.pimg)
+                                h4 Model name: #{c.name}
+                                h4 Brand: #{c.brand}
+                                h4 Price: #{c.price} $
+                                h4 RAM: #{c.ram} GB
+                                h4 Internal storage: #{c.iStorage} GB
+                                h4 Display Size: #{c.display} cm
+                                h4 Battery Life: #{c.battery} mAH
+                                h4 Operating System: #{c.os}
+                                h4 Camera: #{c.camera} MP
+                                h4 Warranty: #{c.warranty} years
+                                p #[button(name="item", value=c.pid, type="submit") Remove]
+                    h2 Total amount: #{cart_sum}            
+                    a(href="/place-order", class="btn btn-warning", style="margin-left: 50px;", type="submit") PLACE ORDER                         
+            else
+                h1 No items found in your cart!            
+
+
+        div(class="page", id="track-page", style="display: none;")
+            div(class="container-fluid", style="background-color:black;")
+                div(class="jumbotron", style="background-color:black;")
+                    h1(style="color:white;") Track        
+
+        div(class="page", id="logs-page", style="display: none;")
+            div(class="container-fluid", style="background-color:black;")
+                div(class="jumbotron", style="background-color:black;")
+                    h1(style="color:white;") Logs        
+
         hr
         script(src='../utils/cust_home.js')
         link(href='../public/css/product.css', rel='stylesheet', type='text/css') 

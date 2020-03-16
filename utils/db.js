@@ -22,3 +22,15 @@ exports.GET_FULL_PRODUCT_INFO =
     FROM PRODUCT
     WHERE product_id=?`;
 
+exports.ADD_TO_CART =
+    `CALL ADD_TO_CART(?,?)`;    
+
+exports.GET_CART_ITEMS =
+    `CALL GET_CART(?)`;
+
+exports.REMOVE_FROM_CART =
+    `DELETE FROM CART
+    WHERE item_no=?`;    
+
+exports.PLACE_ORDER = 
+    `SET @cust_id=MAP_USERNAME_TO_ID(?,?); CALL PLACE_ORDER(@cust_id)`;    

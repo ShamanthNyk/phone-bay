@@ -28,11 +28,3 @@ document.getElementById("logs-btn").onclick = function() {
     document.getElementById("add-btn").className = "none";
      
 };
-
-// window.onhashchange = function() {
-//     render(window.location.hash);
-// };
-
-// function render(hashKey) {
-//     let pages = ""
-// }
