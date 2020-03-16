@@ -1,0 +1,16 @@
+body, html {
+    height: 100%;
+    margin: 0;
+    background-color: slateblue;
+}
+
+#sign-in-btn, #sign-up-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#sign-in-form {
+    visibility:hidden !important;
+    display: none !important;
+}

@@ -1,0 +1,33 @@
+{
+  "name": "dbms-e-cart-dev",
+  "version": "1.0.0",
+  "description": "demonstartion of e-commerce service",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vi88i/dbms-e-cart.git"
+  },
+  "keywords": [
+    "e-commerce"
+  ],
+  "author": "vi88i",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vi88i/dbms-e-cart/issues"
+  },
+  "homepage": "https://github.com/vi88i/dbms-e-cart#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.4",
+    "crypto-random-string": "^3.1.0",
+    "express": "^4.17.1",
+    "express-session": "^1.17.0",
+    "hbs": "^4.1.0",
+    "http-errors": "^1.7.3",
+    "mysql": "^2.18.1",
+    "pug": "^2.0.4"
+  }
+}
