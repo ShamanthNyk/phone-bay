@@ -27,7 +27,7 @@ html
                     h1(style="color:white;") My products        
 
             if products.length > 0
-                form(action="/remove-product" method="POST")
+                form(action="/remove-from-product" method="POST")
                     div(class="product-list")        
                         each product in products       
                             div(class="product-card")

@@ -95,3 +95,19 @@ exports.process_new_product = function(req, res, next) {
             }    
     });     
 };
+
+exports.remove_from_product =  function(req, res, next) {
+    if(req.session.acc_type == 'trader') {
+        con.query(
+            db.REMOVE_FROM_PRODUCT, 
+            [req.body.item],
+            function (err, result, fields) {
+                if (err) {
+                    throw err;
+                }
+            res.redirect('/home-trader');    
+        }); 
+    } else {
+        res.redirect('/');
+    }                
+};

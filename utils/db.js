@@ -66,3 +66,7 @@ exports.GET_TRADER_PRODUCTS =
     `SELECT *
     FROM PRODUCT
     WHERE trader_id=MAP_USERNAME_TO_ID(?,?)`;    
+
+exports.REMOVE_FROM_PRODUCT =
+    `DELETE FROM PRODUCT
+    WHERE product_id=?`;        

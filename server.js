@@ -50,7 +50,7 @@ app.get('/add-to-cart', cust.add_to_cart);
 app.post('/remove-from-cart', cust.remove_from_cart);
 app.get('/place-order', cust.place_order);
 app.post('/process-new-product', trader.process_new_product);
-
+app.post('/remove-from-product', trader.remove_from_product);
 
 /* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
 

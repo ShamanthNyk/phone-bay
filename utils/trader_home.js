@@ -59,6 +59,5 @@ document.getElementById('add').onclick = function() {
         }
     }
     
-    alert(JSON.stringify(formData));
     xhr.send(JSON.stringify(formData));
 };
