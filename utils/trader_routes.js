@@ -32,10 +32,6 @@ exports.home = function(req, res) {
     }
 };
 
-exports.add =function(req, res, next) {
-    res.render('add');
-};
-
 exports.process_new_product = function(req, res, next) {
     con.query(
         db.INSERT_NEW_PRODUCT, 
@@ -54,9 +50,9 @@ exports.process_new_product = function(req, res, next) {
         ],
         function (err, result, fields) {
             if (err) {
-                res.render('add', {error: err});               
+                res.send(JSON.stringify({msg: err}));               
             } else {
-                res.render('add', {msg: "Success"});
+                res.send(JSON.stringify({msg: "Sucess"}));
             }    
     });     
 };

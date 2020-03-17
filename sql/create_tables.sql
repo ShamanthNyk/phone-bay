@@ -69,18 +69,6 @@ CREATE TABLE ORDERS (
     FOREIGN KEY (product_id) REFERENCES PRODUCT (product_id) ON DELETE CASCADE
 );
 
--- keeps track of all users activity
-
-CREATE TABLE LOGS (
-    cust_id INT NOT NULL,
-    trader_id INT NOT NULL,
-    order_id INT NOT NULL,
-    PRIMARY KEY (cust_id, trader_id, order_id),
-    FOREIGN KEY (cust_id) REFERENCES CUSTOMER (cust_id) ON DELETE CASCADE,
-    FOREIGN KEY (trader_id) REFERENCES TRADER (trader_id) ON DELETE CASCADE,
-    FOREIGN KEY (order_id) REFERENCES ORDERS (order_id) ON DELETE CASCADE
-);
-
 -- seller will decide the wareshouse which will deliver it to the customers. 
 
 CREATE TABLE WAREHOUSE (
@@ -93,7 +81,6 @@ CREATE TABLE SHIPMENT (
     order_id INT,
     warehouse INT NOT NULL,
     shipdate DATE DEFAULT NULL,
-    shipped varchar(3) DEFAULT 'NO',
     PRIMARY KEY (order_id),
     FOREIGN KEY (order_id) REFERENCES ORDERS (order_id),
     FOREIGN KEY (warehouse) REFERENCES WAREHOUSE (warehouse)

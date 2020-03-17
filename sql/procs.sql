@@ -184,3 +184,29 @@ BEGIN
 
 END $$ 
 DELIMITER ;
+
+-- insert transactions into logs of customer
+--DELIMITER $$
+ 
+--CREATE TRIGGER LOG_AFTER_PLACING_ORDER
+--AFTER INSERT ON ORDERS
+--FOR EACH ROW
+--BEGIN
+--    INSERT INTO LOGS
+--    VALUES(new.cust_id, new.trader_id, new.order_id);
+--END $$
+--DELIMITER ;
+
+-- update buys after placing order
+DELIMITER $$
+ 
+CREATE TRIGGER UPDATE_BUYS_ORDER
+AFTER INSERT ON ORDERS
+FOR EACH ROW
+BEGIN
+    UPDATE PRODUCT
+    SET buys = buys + 1
+    WHERE product_id=new.product_id;
+END $$
+ 
+DELIMITER ;

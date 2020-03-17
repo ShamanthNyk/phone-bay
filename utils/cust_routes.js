@@ -22,21 +22,12 @@ con.connect(function (err) {
         throw err;    
 });
 
-// try {
-//     const someRows = await db.query( 'SELECT * FROM some_table' );
-//     const otherRows = await db.query( 'SELECT * FROM other_table' );
-//     // do something with someRows and otherRows
-//   } catch ( err ) {
-//     // handle the error
-//   } finally {
-//     await db.close();
-//   }
-
 exports.home = async function(req, res) {
     if(req.session.acc_type == 'customer') {
         var user_data = {uname: req.session.uname};
         var products = [];
         var cart = [];
+        var logs = [];
         var cart_sum = 0;
         try {
             await con.query(db.GET_TOP_PRODUCTS_BASIC_INFO, function(err, result, fields) {
@@ -71,9 +62,29 @@ exports.home = async function(req, res) {
                     });
                     cart_sum = cart_sum + result[0][i].price;
                     
+                }                           
+            });
+            await con.query(db.GET_LOGS, [req.session.uname,req.session.acc_type,req.session.uname,req.session.acc_type],
+                function(err, result, fields) {
+                if (err)
+                    throw err;                 
+                for (var i = 0;i < result[0].length; i++) {
+                    logs.push({
+                        idx: i+1,
+                        title: result[0][i].title,
+                        cost: result[0][i].ordamt,
+                        trader: result[0][i].name,                        
+                        shipdate: result[1][i] == undefined ? '--Yet to be shipped--' : result[1][i].shipdate, // values of shipdate
+                        city: result[1][i] == undefined ? '--Yet to be shipped--' : result[1][i].city // and city comes from second select stmt
+                    });
                 }
-                res.render('cust_home', {user_data: user_data, products: products, cart: cart, cart_sum: cart_sum});                           
-            });                        
+                res.render('cust_home', {user_data: user_data, 
+                    products: products, 
+                    cart: cart, 
+                    cart_sum: cart_sum,
+                    logs: logs
+                });                           
+            });                                    
         } catch (err) {
             console.log(err);
         } finally {

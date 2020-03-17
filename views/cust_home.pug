@@ -15,7 +15,6 @@ html
                 ul(class="nav navbar-nav")
                     li(id="home-btn", class="active") #[a(href="#home") #[strong Home]]
                     li(id="cart-btn") #[a(href="#cart") #[strong Cart]]
-                    li(id="track-btn") #[a(href="#track") #[strong Track]]
                     li(id="logs-btn") #[a(href="#logs") #[strong Logs]] 
                 form(class="navbar-form navbar-left", action="/action")
                     div(class="form-group")
@@ -66,17 +65,32 @@ html
             else
                 h1 No items found in your cart!            
 
-
-        div(class="page", id="track-page", style="display: none;")
-            div(class="container-fluid", style="background-color:black;")
-                div(class="jumbotron", style="background-color:black;")
-                    h1(style="color:white;") Track        
-
         div(class="page", id="logs-page", style="display: none;")
             div(class="container-fluid", style="background-color:black;")
                 div(class="jumbotron", style="background-color:black;")
                     h1(style="color:white;") Logs        
 
+                if logs.length > 0
+                    table(class="table table-hover table-dark", style="color:white;")
+                        thead
+                            tr
+                                th(scope="col") No.
+                                th(scope="col") Title
+                                th(scope="col") Cost
+                                th(scope="col") Trader
+                                th(scope="col") Wareshouse
+                                th(scope="col") Shipdate
+                        tbody        
+                            each log in logs        
+                                tr
+                                    th(scope="row") #{log.idx}
+                                    td #{log.title}
+                                    td #{log.cost}
+                                    td #{log.trader}
+                                    td #{log.city}
+                                    td #{log.shipdate}                                
+                else
+                    h1 No activities so far zzzzz!            
         hr
         script(src='../utils/cust_home.js')
         link(href='../public/css/product.css', rel='stylesheet', type='text/css') 
