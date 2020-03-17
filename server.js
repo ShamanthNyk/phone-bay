@@ -51,32 +51,4 @@ app.post('/remove-from-cart', cust.remove_from_cart);
 app.get('/place-order', cust.place_order);
 app.post('/process-new-product', trader.process_new_product);
 app.post('/remove-from-product', trader.remove_from_product);
-
-/* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
-
-// app.post('/process-new-product', function(req, res, next) {
-//     con.query(
-//         db.INSERT_NEW_PRODUCT, 
-//         [req.body.pid, 
-//         req.body.name,
-//         req.body.price,
-//         req.body.ram,
-//         req.body.iStorage,
-//         req.body.display,
-//         req.body.battery,
-//         req.body.OS,
-//         req.body.camera,
-//         req.body.warranty,
-//         req.body.pimg
-//         ],
-//         function (err, result, fields) {
-//             if (err) {
-//                 res.render('add', {error: err});               
-//                 console.log(err);
-//             } else {
-//                 res.render('add', {msg: "Success"});
-//             }    
-                
-//     });     
-// });
-
+app.post('/dispatch-item', trader.dispatch_item);

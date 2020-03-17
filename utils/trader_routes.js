@@ -28,6 +28,8 @@ exports.home = async function(req, res) {
             var user_data = {uname: req.session.uname};
             var products = [];
             var logs = [];
+            var orders = [];
+            var warehouse = [];
             await con.query(db.GET_TRADER_PRODUCTS, [req.session.uname, req.session.acc_type], 
                 function(err, result, fields) {
                 if (err)
@@ -40,7 +42,34 @@ exports.home = async function(req, res) {
                         pimg: result[i].pimg
                     });
                 }                                                               
-            });    
+            });
+            await con.query(db.GET_AVAILABLE_WAREHOUSE,
+                function(err, result, fields) {
+                if (err)
+                    throw err;           
+                for (var i = 0;i < result.length; i++) {
+                    warehouse.push({
+                        id: result[i].warehouse,
+                        city: result[i].city
+                    });
+                }
+            });             
+            await con.query(db.GET_ORDERS_FOR_TRADER, [req.session.uname,req.session.acc_type],
+                function(err, result, fields) {
+                if (err)
+                    throw err;                 
+                for (var i = 0;i < result.length; i++) {
+                    orders.push({
+                        idx: i+1,
+                        id: result[i].id,
+                        title: result[i].title,
+                        cost: result[i].ordamt,
+                        customer: result[i].name,
+                        odate: result[i].odate,  
+                        address: result[i].address + "." + result[i].state + "." + result[i].pincode 
+                    });
+                }
+            });                   
             await con.query(db.GET_LOGS_TRADER, [req.session.uname,req.session.acc_type,req.session.uname,req.session.acc_type],
                 function(err, result, fields) {
                 if (err)
@@ -58,7 +87,9 @@ exports.home = async function(req, res) {
                 }
                 res.render('trader_home', {user_data: user_data, 
                     products: products, 
-                    logs: logs
+                    logs: logs,
+                    orders: orders,
+                    warehouse: warehouse
                 });                           
             });                       
         } else {
@@ -101,6 +132,26 @@ exports.remove_from_product =  function(req, res, next) {
         con.query(
             db.REMOVE_FROM_PRODUCT, 
             [req.body.item],
+            function (err, result, fields) {
+                if (err) {
+                    throw err;
+                }
+            res.redirect('/home-trader');    
+        }); 
+    } else {
+        res.redirect('/');
+    }                
+};
+
+exports.dispatch_item = function(req, res, next) {
+    if(req.session.acc_type == 'trader') {
+        let date = req.body.shipdate.replace('-', '');
+        date = date.replace('-', '');
+        con.query(
+            db.DISPATCH_ITEM, 
+            [req.body.order_id,
+            req.body.w_id,
+            date],
             function (err, result, fields) {
                 if (err) {
                     throw err;

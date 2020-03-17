@@ -198,6 +198,7 @@ DELIMITER ;
 --DELIMITER ;
 
 -- update buys after placing order
+DROP TRIGGER UPDATE_BUYS_ORDER;
 DELIMITER $$
  
 CREATE TRIGGER UPDATE_BUYS_ORDER
@@ -210,3 +211,24 @@ BEGIN
 END $$
  
 DELIMITER ;
+
+-- make sure shipdate is valid
+DROP TRIGGER CHECK_SHIPDATE;
+DELIMITER $$
+ 
+CREATE TRIGGER CHECK_SHIPDATE
+BEFORE INSERT ON SHIPMENT
+FOR EACH ROW
+BEGIN
+    DECLARE _odate DATE;
+    SELECT O.odate INTO _odate
+    FROM ORDERS O
+    WHERE O.order_id=new.order_id;
+    IF DATEDIFF(new.shipdate, _odate) <= 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Invalid shipping date';    
+    END IF;    
+END $$
+ 
+DELIMITER ;
+

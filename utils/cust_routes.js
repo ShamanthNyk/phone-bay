@@ -74,11 +74,19 @@ exports.home = async function(req, res) {
                         title: result[0][i].title,
                         cost: result[0][i].ordamt,
                         trader: result[0][i].name,
-                        odate: result[0][i].odate,                        
-                        shipdate: result[1][i] == undefined ? '--Yet to be shipped--' : result[1][i].shipdate, // values of shipdate
-                        city: result[1][i] == undefined ? '--Yet to be shipped--' : result[1][i].city // and city comes from second select stmt
+                        odate: result[0][i].odate,
+                        shipdate: '--Yet to be shipped--',
+                        city: '--Yet to be shipped--'
                     });
                 }
+                for(var i = 0;i < result[1].length; i++) {
+                    for(var j=0;j < result[0].length; j++) {
+                        if(result[0][j].order_id == result[1][i].order_id) {
+                            logs[j]["shipdate"] = result[1][i].shipdate;
+                            logs[j]["city"] = result[1][i].city;
+                        }
+                    }
+                }                
                 res.render('cust_home', {user_data: user_data, 
                     products: products, 
                     cart: cart, 

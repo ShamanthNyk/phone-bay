@@ -65,13 +65,13 @@ html
             else
                 h1 No items found in your cart!            
 
-        div(class="page", id="logs-page", style="display: none;")
+        div(class="page", id="logs-page", style="color: red;display: none;")
             div(class="container-fluid", style="background-color:black;")
                 div(class="jumbotron", style="background-color:black;")
                     h1(style="color:white;") Logs        
 
                 if logs.length > 0
-                    table(class="table table-hover table-dark", style="color:white;")
+                    table(class="table table-hover table-dark")
                         thead
                             tr
                                 th(scope="col") No.

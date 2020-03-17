@@ -80,13 +80,13 @@ html
                 br    
                 img(id="display-img", src="", style="display:none;")        
         
-        div(class="page", id="logs-page", style="display: none;")
+        div(class="page", id="logs-page", style="color: crimson;display: none;")
             div(class="container-fluid", style="background-color:black;")
                 div(class="jumbotron", style="background-color:black;")
                     h1(style="color:white;") Logs        
 
                 if logs.length > 0
-                    table(class="table table-hover table-dark", style="color:white;")
+                    table(class="table table-hover table-dark")
                         thead
                             tr
                                 th(scope="col") No.
@@ -109,6 +109,47 @@ html
                 else
                     h1 No activities so far zzzzz! 
 
+        div(class="page", id="orders-page", style="display: none;")
+            div(class="container-fluid", style="background-color:black;")
+                div(class="jumbotron", style="background-color:black;")
+                    h1(style="color:white;") Orders        
+
+                    if orders.length > 0
+                        table(class="table table-hover table-dark", style="color:crimson;")
+                            thead
+                                tr
+                                    th(scope="col") No.
+                                    th(scope="col") Title
+                                    th(scope="col") Cost
+                                    th(scope="col") Customer name
+                                    th(scope="col") Customer address
+                                    th(scope="col") Order date
+                                    th(scope="col") Wareshouse
+                                    th(scope="col") Shipdate
+                                    th(scope="col") Dispatch
+                            tbody           
+                                each order in orders
+                                    form(action="/dispatch-item" method="POST")
+                                        tr
+                                            th(scope="row") #{order.idx}
+                                            td #{order.title}
+                                            td #{order.cost}
+                                            td #{order.customer}
+                                            td #{order.address}
+                                            td #{order.odate}
+                                            td
+                                                label(class="mr-sm-2", for="inlineFormCustomSelect")
+                                                    select(name="w_id", class="custom-select mr-sm-2", id="inlineFormCustomSelect")
+                                                        each w in warehouse
+                                                            option(value=w.id) #{w.city}
+                                            
+                                            td
+                                                label(for="shipdate") 
+                                                input(type="date", name="shipdate")                                
+                                            td 
+                                                button(type="submit", name="order_id", id="dispatch", value=order.id, class="btn btn-warning") Dispatch
+                    else
+                        h4 Sorry there are no orders at the moment!                         
         hr
         script(src='../utils/trader_home.js')
         script(src="../utils/add.js")
