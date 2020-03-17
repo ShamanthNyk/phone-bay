@@ -36,8 +36,8 @@ exports.REMOVE_FROM_CART =
 exports.PLACE_ORDER = 
     `SET @cust_id=MAP_USERNAME_TO_ID(?,?); CALL PLACE_ORDER(@cust_id)`;
     
-exports.GET_LOGS =
-    `SELECT PR.title AS title, O.ordamt AS ordamt, P.fullname AS name
+exports.GET_LOGS_CUSTOMER =
+    `SELECT PR.title AS title, O.ordamt AS ordamt, P.fullname AS name, O.odate AS odate
     FROM ORDERS O, PERSON P, PRODUCT PR, TRADER T
     WHERE O.product_id=PR.product_id AND
     O.trader_id=T.trader_id AND 
@@ -48,3 +48,21 @@ exports.GET_LOGS =
     FROM SHIPMENT S, WAREHOUSE W, ORDERS O
     WHERE O.order_id=S.order_id AND W.warehouse=S.warehouse AND O.cust_id=MAP_USERNAME_TO_ID(?,?)
     ORDER BY O.order_id DESC`;    
+
+exports.GET_LOGS_TRADER =
+    `SELECT PR.title AS title, O.ordamt AS ordamt, P.fullname AS name, O.odate AS odate
+    FROM ORDERS O, PERSON P, PRODUCT PR, CUSTOMER C
+    WHERE O.product_id=PR.product_id AND
+    O.cust_id=C.cust_id AND 
+    C._id=P._id AND 
+    O.trader_id=MAP_USERNAME_TO_ID(?,?)
+    ORDER BY O.order_id DESC;
+    SELECT S.shipdate, W.city
+    FROM SHIPMENT S, WAREHOUSE W, ORDERS O
+    WHERE O.order_id=S.order_id AND W.warehouse=S.warehouse AND O.trader_id=MAP_USERNAME_TO_ID(?,?)
+    ORDER BY O.order_id DESC`;  
+
+exports.GET_TRADER_PRODUCTS = 
+    `SELECT *
+    FROM PRODUCT
+    WHERE trader_id=MAP_USERNAME_TO_ID(?,?)`;    

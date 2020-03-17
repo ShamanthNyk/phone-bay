@@ -45,7 +45,6 @@ app.get('/sign-out', auth.sign_out);
 app.post('/verify', auth.verify);
 app.get('/home-customer', cust.home);
 app.get('/home-trader', trader.home);
-app.get('/add', trader.add);
 app.post('/view-product', cust.view_product);
 app.get('/add-to-cart', cust.add_to_cart);
 app.post('/remove-from-cart', cust.remove_from_cart);

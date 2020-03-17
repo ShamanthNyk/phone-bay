@@ -64,7 +64,7 @@ exports.home = async function(req, res) {
                     
                 }                           
             });
-            await con.query(db.GET_LOGS, [req.session.uname,req.session.acc_type,req.session.uname,req.session.acc_type],
+            await con.query(db.GET_LOGS_CUSTOMER, [req.session.uname,req.session.acc_type,req.session.uname,req.session.acc_type],
                 function(err, result, fields) {
                 if (err)
                     throw err;                 
@@ -73,7 +73,8 @@ exports.home = async function(req, res) {
                         idx: i+1,
                         title: result[0][i].title,
                         cost: result[0][i].ordamt,
-                        trader: result[0][i].name,                        
+                        trader: result[0][i].name,
+                        odate: result[0][i].odate,                        
                         shipdate: result[1][i] == undefined ? '--Yet to be shipped--' : result[1][i].shipdate, // values of shipdate
                         city: result[1][i] == undefined ? '--Yet to be shipped--' : result[1][i].city // and city comes from second select stmt
                     });

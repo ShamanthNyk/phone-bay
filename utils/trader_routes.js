@@ -22,13 +22,52 @@ con.connect(function (err) {
         throw err;    
 });
 
-exports.home = function(req, res) {
-    if(req.session.acc_type == 'trader') {
-        var user_data = {uname: req.session.uname};
-        var products = [];
-        res.render('trader_home', {user_data: user_data, products: products});      
-    } else {
-        res.redirect('/');
+exports.home = async function(req, res) {
+    try {
+        if(req.session.acc_type == 'trader') {
+            var user_data = {uname: req.session.uname};
+            var products = [];
+            var logs = [];
+            await con.query(db.GET_TRADER_PRODUCTS, [req.session.uname, req.session.acc_type], 
+                function(err, result, fields) {
+                if (err)
+                    throw err; 
+                for (var i = 0;i < result.length; i++) {
+                    products.push({
+                        pid: result[i].product_id,
+                        title: result[i].title,
+                        price: result[i].price,
+                        pimg: result[i].pimg
+                    });
+                }                                                               
+            });    
+            await con.query(db.GET_LOGS_TRADER, [req.session.uname,req.session.acc_type,req.session.uname,req.session.acc_type],
+                function(err, result, fields) {
+                if (err)
+                    throw err;                 
+                for (var i = 0;i < result[0].length; i++) {
+                    logs.push({
+                        idx: i+1,
+                        title: result[0][i].title,
+                        cost: result[0][i].ordamt,
+                        customer: result[0][i].name,
+                        odate: result[0][i].odate,                        
+                        shipdate: result[1][i] == undefined ? '--Yet to be shipped--' : result[1][i].shipdate, // values of shipdate
+                        city: result[1][i] == undefined ? '--Yet to be shipped--' : result[1][i].city // and city comes from second select stmt
+                    });
+                }
+                res.render('trader_home', {user_data: user_data, 
+                    products: products, 
+                    logs: logs
+                });                           
+            });                       
+        } else {
+            res.redirect('/');
+        }
+    } catch(err) {
+        console.log(err);
+    } finally {
+
     }
 };
 
@@ -50,9 +89,9 @@ exports.process_new_product = function(req, res, next) {
         ],
         function (err, result, fields) {
             if (err) {
-                res.send(JSON.stringify({msg: err}));               
+                res.send(err);               
             } else {
-                res.send(JSON.stringify({msg: "Sucess"}));
+                res.send("Sucess");
             }    
     });     
 };

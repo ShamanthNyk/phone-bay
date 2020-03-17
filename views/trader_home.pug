@@ -7,13 +7,13 @@ html
         link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css")
         script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js")
         script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js")        
-    body
+    body(style="color: white;")
         nav(class="navbar navbar-inverse")
             div(class="container-fluid")
                 div(class="navbar-header")
                     a(class="navbar-brand") #[strong #{user_data.uname}]
                 ul(class="nav navbar-nav")
-                    li(id="home-btn", class="active") #[a(href="#home") #[strong Home]]
+                    li(id="home-btn", class="active") #[a(href="/home-trader") #[strong Home]]
                     li(id="add-btn") #[a(href="#add") #[strong Add]]
                     li(id="orders-btn") #[a(href="#orders") #[strong Orders]]
                     li(id="logs-btn") #[a(href="#logs") #[strong Logs]] 
@@ -21,19 +21,22 @@ html
                     li #[a(href="/sign-out") #[span(class="glyphicon glyphicon-log-out")] Sign out]
 
 
-        div(class="page", id="home-page")        
+        div(class="page", id="home-page", style="color: black;")        
             div(class="container-fluid", style="background-color:black;")
                 div(class="jumbotron", style="background-color:black;")
                     h1(style="color:white;") My products        
 
-            form(action="/remove-product" method="POST")
-                div(class="product-list")        
-                    each product in products       
-                        div(class="product-card")
-                            img(src=product.pimg)
-                            h3 #[strong #{product.name}] 
-                            p(class="product-price") #[strong #{product.price} $]
-                            p #[button(name="item", value=product.pid, type="submit") Remove]
+            if products.length > 0
+                form(action="/remove-product" method="POST")
+                    div(class="product-list")        
+                        each product in products       
+                            div(class="product-card")
+                                img(src=product.pimg)
+                                h3 #[strong #{product.title}] 
+                                p(class="product-price") #[strong #{product.price} $]
+                                p #[button(name="item", value=product.pid, type="submit") Remove]
+            else
+                h1 You don't have any product on sale!
 
         div(class="page", id="add-page", style="display: none;")
             div(class="container-fluid", style="background-color:black;")
@@ -77,6 +80,35 @@ html
                 br    
                 img(id="display-img", src="", style="display:none;")        
         
+        div(class="page", id="logs-page", style="display: none;")
+            div(class="container-fluid", style="background-color:black;")
+                div(class="jumbotron", style="background-color:black;")
+                    h1(style="color:white;") Logs        
+
+                if logs.length > 0
+                    table(class="table table-hover table-dark", style="color:white;")
+                        thead
+                            tr
+                                th(scope="col") No.
+                                th(scope="col") Title
+                                th(scope="col") Cost
+                                th(scope="col") Customer name
+                                th(scope="col") Order date
+                                th(scope="col") Wareshouse
+                                th(scope="col") Shipdate
+                        tbody        
+                            each log in logs        
+                                tr
+                                    th(scope="row") #{log.idx}
+                                    td #{log.title}
+                                    td #{log.cost}
+                                    td #{log.customer}
+                                    td #{log.odate}
+                                    td #{log.city}
+                                    td #{log.shipdate}                                
+                else
+                    h1 No activities so far zzzzz! 
+
         hr
         script(src='../utils/trader_home.js')
         script(src="../utils/add.js")

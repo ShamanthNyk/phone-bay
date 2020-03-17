@@ -13,7 +13,7 @@ html
                 div(class="navbar-header")
                     a(class="navbar-brand", href="#") #[strong #{user_data.uname}]
                 ul(class="nav navbar-nav")
-                    li(id="home-btn", class="active") #[a(href="#home") #[strong Home]]
+                    li(id="home-btn", class="active") #[a(href="/home-customer") #[strong Home]]
                     li(id="cart-btn") #[a(href="#cart") #[strong Cart]]
                     li(id="logs-btn") #[a(href="#logs") #[strong Logs]] 
                 form(class="navbar-form navbar-left", action="/action")
@@ -77,7 +77,8 @@ html
                                 th(scope="col") No.
                                 th(scope="col") Title
                                 th(scope="col") Cost
-                                th(scope="col") Trader
+                                th(scope="col") Trader name
+                                th(scope="col") Order date
                                 th(scope="col") Wareshouse
                                 th(scope="col") Shipdate
                         tbody        
@@ -87,6 +88,7 @@ html
                                     td #{log.title}
                                     td #{log.cost}
                                     td #{log.trader}
+                                    td #{log.odate}
                                     td #{log.city}
                                     td #{log.shipdate}                                
                 else

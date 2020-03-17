@@ -1,5 +1,3 @@
-import { render } from "pug";
-
 document.getElementById("home-btn").onclick = function() {
     this.className = "active";
     document.getElementById("logs-btn").className = "none";
@@ -47,5 +45,20 @@ window.onhashchange = function() {
 };
 
 document.getElementById('add').onclick = function() {
-        
+    let formData = {};
+    let data = document.querySelectorAll(".form-control");
+    for(let i=0;i<data.length;i++) {
+        formData[data[i].name] = data[i].value;
+    }
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', "/process-new-product", true);
+    xhr.setRequestHeader("content-type", "application/json;charset=UTF-8");    
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            alert(xhr.responseText);
+        }
+    }
+    
+    alert(JSON.stringify(formData));
+    xhr.send(JSON.stringify(formData));
 };
