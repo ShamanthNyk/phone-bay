@@ -1,5 +1,13 @@
 # phone-bay
 
+<strong>Install node js and npm</strong>
+```console
+user@machine:~$ sudo apt update
+user@machine:~$ sudo apt install nodejs
+user@machine:~$ sudo apt install nodejs
+user@machine:~$ sudo apt install npm
+```
+
 <strong>Setup mysql server, and set root password</strong>
 ```console
 user@machine:~$ sudo apt-get install mysql-server
@@ -40,7 +48,19 @@ user@machine:~$ cd phone-bay
 user@machine:~$ node server.js 
 ```
 
+<strong>Few screenshots ... </strong>
+Index page
+<img src="./public/assets/index.png" style="height: 480px; width:640px;"><br>
+Logs page
+<img src="./public/assets/logs.png" style="height: 480px; width:640px;"><br>
+Trader home page
+<img src="./public/assets/trader-home.png" style="height: 480px; width:640px;"><br>
+
 <i>Sorry for bad front-end :)</i>
+
+
+
+
 
 
 
