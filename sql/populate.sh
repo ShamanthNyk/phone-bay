@@ -1,0 +1,1 @@
+`mysql -u root -p PHONE_BAY < ./populates.sql`

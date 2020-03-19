@@ -6,14 +6,16 @@ const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-//app.use(express.static(path.join(__dirname, '../'))); 
+app.use(express.static(path.join(__dirname, '../'))); 
+
 const db = require('./db');
+const config = require('../public/global/config')
 
 const con = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "Viggi@2000",
-    database: "PHONE_BAY",
+    host: config.host,
+    user: config.user,
+    password: config.password,
+    database: config.database,
     multipleStatements: true
 });
 
