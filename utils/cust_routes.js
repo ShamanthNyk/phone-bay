@@ -38,7 +38,8 @@ exports.home = async function(req, res) {
                         pid: result[i].product_id,
                         title: result[i].title,
                         price: result[i].price,
-                        pimg: result[i].pimg
+                        pimg: result[i].pimg,
+                        buys: result[i].buys
                     });
                 }
             });
@@ -58,7 +59,8 @@ exports.home = async function(req, res) {
                         battery: result[0][i].battery,
                         os: result[0][i].os,
                         camera: result[0][i].camera,
-                        warranty: result[0][i].warranty
+                        warranty: result[0][i].warranty,
+                        buys: result[0][i].buys
                     });
                     cart_sum = cart_sum + result[0][i].price;
                     
@@ -75,6 +77,7 @@ exports.home = async function(req, res) {
                         cost: result[0][i].ordamt,
                         trader: result[0][i].name,
                         odate: result[0][i].odate,
+                        mode: result[0][i].mode,
                         shipdate: '--Yet to be shipped--',
                         city: '--Yet to be shipped--'
                     });
@@ -86,13 +89,16 @@ exports.home = async function(req, res) {
                             logs[j]["city"] = result[1][i].city;
                         }
                     }
-                }                
-                res.render('cust_home', {user_data: user_data, 
+                }
+                let data = {user_data: user_data, 
                     products: products, 
                     cart: cart, 
                     cart_sum: cart_sum,
                     logs: logs
-                });                           
+                };
+                if(req.session.alert_type)
+                    data[req.session.alert_type] = req.session.alert_data;                
+                res.render('cust_home', data);                           
             });                                    
         } catch (err) {
             console.log(err);
@@ -124,21 +130,42 @@ exports.view_product = function(req, res, next) {
                 battery: result[0].battery,
                 os: result[0].os,
                 camera: result[0].camera,
-                warranty: result[0].warranty
+                warranty: result[0].warranty,
+                buys: result[0].buys
             });    
     });     
 };
 
 exports.add_to_cart =  function(req, res, next) {
-    con.query(
-        db.ADD_TO_CART, 
-        [req.session.uname, req.session.product_id],
-        function (err, result, fields) {
-            if (err) {
-                throw err;
-            }
-            res.redirect('/home-customer');    
-    });                 
+    if(req.body.action === "buy now") {
+        con.query(
+            db.BUY_NOW, 
+            [req.session.uname, req.session.acc_type, req.session.product_id, req.body.payment],
+            function (err, result, fields) {
+                if (err) {
+                    req.session.alert_type = "error"; 
+                    req.session.alert_data = 'Something went wrong while buying, try again later!';
+                } else {
+                    req.session.alert_type = "msg"; 
+                    req.session.alert_data = 'Order placed successfully!';                
+                }
+                res.redirect('/home-customer');    
+        });
+    } else {
+        con.query(
+            db.ADD_TO_CART, 
+            [req.session.uname, req.session.product_id],
+            function (err, result, fields) {
+                if (err) {
+                    req.session.alert_type = "error"; 
+                    req.session.alert_data = 'Something went wrong while adding to cart, try again later!';
+                } else {
+                    req.session.alert_type = "msg"; 
+                    req.session.alert_data = 'Item added to cart';                
+                }
+                res.redirect('/home-customer');    
+        }); 
+    }                
 };
 
 exports.remove_from_cart =  function(req, res, next) {
@@ -147,7 +174,11 @@ exports.remove_from_cart =  function(req, res, next) {
         [req.body.item],
         function (err, result, fields) {
             if (err) {
-                throw err;
+                req.session.alert_type = "error"; 
+                req.session.alert_data = 'Something went wrong while removing from cart, try again later!';
+            } else {
+                req.session.alert_type = "msg"; 
+                req.session.alert_data = 'Item removed from cart!';                   
             }
             res.redirect('/home-customer');    
     });                 
@@ -157,10 +188,14 @@ exports.place_order = function(req, res, next) {
     if(req.session.acc_type == 'customer') { // if - for bit of security
         con.query(
             db.PLACE_ORDER, 
-            [req.session.uname, req.session.acc_type],
+            [req.session.uname, req.session.acc_type, req.body.payment],
             function (err, result, fields) {
                 if (err) {
-                    throw err;
+                    req.session.alert_type = "error"; 
+                    req.session.alert_data = 'Something went wrong while placing order, try again later!';
+                } else {
+                    req.session.alert_type = "msg"; 
+                    req.session.alert_data = 'Order placed successfully!';                    
                 }
                 res.redirect('/home-customer');    
         }); 

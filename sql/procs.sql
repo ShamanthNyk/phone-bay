@@ -150,9 +150,11 @@ END $$
 DELIMITER ;
 
 -- place orders for items in cart
+DROP PROCEDURE PLACE_ORDER;
 DELIMITER $$
 CREATE PROCEDURE PLACE_ORDER(
-    IN _cust_id INT
+    IN _cust_id INT,
+    IN _mode varchar(20)
     )
 BEGIN
     DECLARE finished INTEGER DEFAULT 0;
@@ -177,25 +179,36 @@ BEGIN
         FROM PRODUCT P
         WHERE P.product_id=_product_id;
         DELETE FROM CART WHERE item_no=_item_no;
-        INSERT INTO ORDERS(cust_id, trader_id, product_id, ordamt, odate)
-        VALUES(_cust_id, _trader_id, _product_id, _price, SYSDATE());
+        INSERT INTO ORDERS(cust_id, trader_id, product_id, ordamt, odate, mode)
+        VALUES(_cust_id, _trader_id, _product_id, _price, SYSDATE(), _mode);
     END LOOP shift;
     CLOSE items;
 
 END $$ 
 DELIMITER ;
 
--- insert transactions into logs of customer
---DELIMITER $$
- 
---CREATE TRIGGER LOG_AFTER_PLACING_ORDER
---AFTER INSERT ON ORDERS
---FOR EACH ROW
---BEGIN
---    INSERT INTO LOGS
---    VALUES(new.cust_id, new.trader_id, new.order_id);
---END $$
---DELIMITER ;
+-- buy now, also it should remove the same item from customer's cart
+DROP PROCEDURE BUY_NOW;
+DELIMITER $$
+CREATE PROCEDURE BUY_NOW(
+    IN _cust_id INT,
+    IN _product_id INT,
+    IN _mode varchar(20)
+    )
+BEGIN
+    DECLARE _trader_id INTEGER;
+    DECLARE _price FLOAT;
+    DECLARE _item_no INTEGER;
+
+    SELECT P.trader_id, P.price INTO _trader_id, _price 
+    FROM PRODUCT P
+    WHERE P.product_id=_product_id;
+
+    INSERT INTO ORDERS(cust_id, trader_id, product_id, ordamt, odate, mode)
+    VALUES(_cust_id, _trader_id, _product_id, _price, SYSDATE(), _mode);
+
+END $$ 
+DELIMITER ;
 
 -- update buys after placing order
 DROP TRIGGER UPDATE_BUYS_ORDER;

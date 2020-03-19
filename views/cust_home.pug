@@ -23,6 +23,12 @@ html
                         i(class="glyphicon glyphicon-search")
                 ul(class="nav navbar-nav navbar-right")
                     li #[a(href="/sign-out") #[span(class="glyphicon glyphicon-log-out")] Sign out]
+        if error
+            div(class="alert alert-danger") Latest event: #{error}
+            br
+        if msg 
+            div(class="alert alert-success") Latest event: #{msg}
+            br       
 
         div(class="page", id="home-page")
             div(class="container-fluid", style="background-color:black;")
@@ -34,8 +40,9 @@ html
                     each product in products       
                         div(class="product-card")
                             img(src=product.pimg)
-                            h3 #[strong #{product.title}] 
-                            p(class="product-price") #[strong #{product.price} $]
+                            h3 #[strong #{product.title}]
+                            h3 Buys: #[strong #{product.buys}] 
+                            p(class="product-price") #[strong ₹ #{product.price}]
                             p #[button(name="item", value=product.pid, type="submit") View]
 
         div(class="page", id="cart-page", style="display: none;")
@@ -51,7 +58,7 @@ html
                                 img(src=c.pimg)
                                 h4 Model name: #{c.name}
                                 h4 Brand: #{c.brand}
-                                h4 Price: #{c.price} $
+                                h4 Price: ₹ #{c.price}
                                 h4 RAM: #{c.ram} GB
                                 h4 Internal storage: #{c.iStorage} GB
                                 h4 Display Size: #{c.display} cm
@@ -60,8 +67,14 @@ html
                                 h4 Camera: #{c.camera} MP
                                 h4 Warranty: #{c.warranty} years
                                 p #[button(name="item", value=c.pid, type="submit") Remove]
-                    h2 Total amount: #{cart_sum}            
-                    a(href="/place-order", class="btn btn-warning", style="margin-left: 50px;", type="submit") PLACE ORDER                         
+                h2 Total amount: ₹ #{cart_sum}
+                form(action="/place-order" method="POST")   
+                    div(class="form-group")
+                        div(class="radio-inline")
+                            label(for="payment") #[input(type="radio", name="payment", value="cash on delivery", checked)] Cash on Delivery  
+                        div(class="radio-inline")     
+                            label(for="payment") #[input(type="radio", name="payment", value="online payment")] Online payment         
+                    button(class="btn btn-warning", style="margin-left: 50px;", type="submit") PLACE ORDER                         
             else
                 h1 No items found in your cart!            
 
@@ -76,9 +89,10 @@ html
                             tr
                                 th(scope="col") No.
                                 th(scope="col") Title
-                                th(scope="col") Cost
+                                th(scope="col") Cost(₹)
                                 th(scope="col") Trader name
                                 th(scope="col") Order date
+                                th(scope="col") Payment mode
                                 th(scope="col") Wareshouse
                                 th(scope="col") Shipdate
                         tbody        
@@ -89,6 +103,7 @@ html
                                     td #{log.cost}
                                     td #{log.trader}
                                     td #{log.odate}
+                                    td #{log.mode}
                                     td #{log.city}
                                     td #{log.shipdate}                                
                 else

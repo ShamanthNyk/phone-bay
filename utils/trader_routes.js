@@ -39,7 +39,8 @@ exports.home = async function(req, res) {
                         pid: result[i].product_id,
                         title: result[i].title,
                         price: result[i].price,
-                        pimg: result[i].pimg
+                        pimg: result[i].pimg,
+                        buys: result[i].buys
                     });
                 }                                                               
             });
@@ -66,6 +67,7 @@ exports.home = async function(req, res) {
                         cost: result[i].ordamt,
                         customer: result[i].name,
                         odate: result[i].odate,  
+                        mode: result[i].mode,
                         address: result[i].address + "." + result[i].state + "." + result[i].pincode 
                     });
                 }
@@ -80,17 +82,22 @@ exports.home = async function(req, res) {
                         title: result[0][i].title,
                         cost: result[0][i].ordamt,
                         customer: result[0][i].name,
-                        odate: result[0][i].odate,                        
+                        odate: result[0][i].odate,
+                        mode: result[0][i].mode,                         
                         shipdate: result[1][i] == undefined ? '--Yet to be shipped--' : result[1][i].shipdate, // values of shipdate
                         city: result[1][i] == undefined ? '--Yet to be shipped--' : result[1][i].city // and city comes from second select stmt
                     });
                 }
-                res.render('trader_home', {user_data: user_data, 
+                let data =  {
+                    user_data: user_data, 
                     products: products, 
                     logs: logs,
                     orders: orders,
                     warehouse: warehouse
-                });                           
+                }
+                if(req.session.alert_type)
+                    data[req.session.alert_type] = req.session.alert_data;
+                res.render('trader_home', data);                           
             });                       
         } else {
             res.redirect('/');
@@ -134,7 +141,11 @@ exports.remove_from_product =  function(req, res, next) {
             [req.body.item],
             function (err, result, fields) {
                 if (err) {
-                    throw err;
+                    req.session.alert_type = "error"; 
+                    req.session.alert_data = 'Something went wrong while removing product, try again later!';
+                } else {
+                    req.session.alert_type = "msg"; 
+                    req.session.alert_data = 'Item removed successfully!';                    
                 }
             res.redirect('/home-trader');    
         }); 
@@ -154,9 +165,13 @@ exports.dispatch_item = function(req, res, next) {
             date],
             function (err, result, fields) {
                 if (err) {
-                    throw err;
+                    req.session.alert_type = "error"; 
+                    req.session.alert_data = 'Invalid shipping date!';
+                } else {
+                    req.session.alert_type = "msg";
+                    req.session.alert_data = 'Shipped successfully!';
                 }
-            res.redirect('/home-trader');    
+                res.redirect('/home-trader');    
         }); 
     } else {
         res.redirect('/');

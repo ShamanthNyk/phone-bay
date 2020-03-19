@@ -13,7 +13,7 @@ exports.INSERT_NEW_PRODUCT =
     `CALL INSERT_NEW_PRODUCT(?,?,?,?,?,?,?,?,?,?,?,?)`;
 
 exports.GET_TOP_PRODUCTS_BASIC_INFO =
-    `SELECT product_id, title, price, pimg
+    `SELECT product_id, title, price, pimg, buys
     FROM PRODUCT
     ORDER BY buys DESC
     LIMIT 8`;
@@ -33,11 +33,21 @@ exports.REMOVE_FROM_CART =
     `DELETE FROM CART
     WHERE item_no=?`;    
 
+exports.BUY_NOW = 
+    `SET @cust_id=MAP_USERNAME_TO_ID(?,?); CALL BUY_NOW(@cust_id,?,?)`;    
+
+
 exports.PLACE_ORDER = 
-    `SET @cust_id=MAP_USERNAME_TO_ID(?,?); CALL PLACE_ORDER(@cust_id)`;
+    `SET @cust_id=MAP_USERNAME_TO_ID(?,?); CALL PLACE_ORDER(@cust_id,?)`;
     
 exports.GET_LOGS_CUSTOMER =
-    `SELECT PR.title AS title, O.ordamt AS ordamt, P.fullname AS name, O.odate AS odate, O.order_id AS order_id
+    `SELECT 
+        PR.title AS title, 
+        O.ordamt AS ordamt, 
+        P.fullname AS name, 
+        O.odate AS odate, 
+        O.order_id AS order_id,
+        O.mode AS mode
     FROM ORDERS O, PERSON P, PRODUCT PR, TRADER T
     WHERE O.product_id=PR.product_id AND
     O.trader_id=T.trader_id AND 
@@ -50,7 +60,12 @@ exports.GET_LOGS_CUSTOMER =
     ORDER BY O.order_id DESC`;    
 
 exports.GET_LOGS_TRADER =
-    `SELECT PR.title AS title, O.ordamt AS ordamt, P.fullname AS name, O.odate AS odate
+    `SELECT
+        PR.title AS title,
+        O.ordamt AS ordamt,
+        P.fullname AS name,
+        O.odate AS odate,
+        O.mode AS mode
     FROM ORDERS O, PERSON P, PRODUCT PR, CUSTOMER C
     WHERE O.product_id=PR.product_id AND
     O.cust_id=C.cust_id AND 
@@ -80,7 +95,8 @@ exports.GET_ORDERS_FOR_TRADER =
         O.order_id AS id,
         P._address AS address,
         P._state AS state,
-        P._pincode AS pincode
+        P._pincode AS pincode,
+        O.mode AS mode
     FROM ORDERS O, PERSON P, PRODUCT PR, CUSTOMER C
     WHERE O.product_id=PR.product_id AND
     O.cust_id=C.cust_id AND 

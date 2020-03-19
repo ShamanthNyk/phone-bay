@@ -63,6 +63,7 @@ CREATE TABLE ORDERS (
     product_id INT NOT NULL,
     ordamt float NOT NULL,
     odate DATE DEFAULT NULL,
+    mode varchar(20) NOT NULL, 
     PRIMARY KEY (order_id),
     FOREIGN KEY (cust_id) REFERENCES CUSTOMER (cust_id) ON DELETE CASCADE,
     FOREIGN KEY (trader_id) REFERENCES TRADER (trader_id) ON DELETE CASCADE,

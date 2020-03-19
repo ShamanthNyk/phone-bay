@@ -20,6 +20,12 @@ html
                 ul(class="nav navbar-nav navbar-right")
                     li #[a(href="/sign-out") #[span(class="glyphicon glyphicon-log-out")] Sign out]
 
+        if error
+            div(class="alert alert-danger") Latest event: #{error}
+            br
+        if msg 
+            div(class="alert alert-success") Latest event: #{msg}
+            br                 
 
         div(class="page", id="home-page", style="color: black;")        
             div(class="container-fluid", style="background-color:black;")
@@ -33,7 +39,8 @@ html
                             div(class="product-card")
                                 img(src=product.pimg)
                                 h3 #[strong #{product.title}] 
-                                p(class="product-price") #[strong #{product.price} $]
+                                h3 Buys: #[strong #{product.buys}] 
+                                p(class="product-price") #[strong ₹ #{product.price}]
                                 p #[button(name="item", value=product.pid, type="submit") Remove]
             else
                 h1 You don't have any product on sale!
@@ -91,9 +98,10 @@ html
                             tr
                                 th(scope="col") No.
                                 th(scope="col") Title
-                                th(scope="col") Cost
+                                th(scope="col") Cost(₹)
                                 th(scope="col") Customer name
                                 th(scope="col") Order date
+                                th(scope="col") Payment mode
                                 th(scope="col") Wareshouse
                                 th(scope="col") Shipdate
                         tbody        
@@ -104,6 +112,7 @@ html
                                     td #{log.cost}
                                     td #{log.customer}
                                     td #{log.odate}
+                                    td #{log.mode}
                                     td #{log.city}
                                     td #{log.shipdate}                                
                 else
@@ -120,10 +129,11 @@ html
                                 tr
                                     th(scope="col") No.
                                     th(scope="col") Title
-                                    th(scope="col") Cost
+                                    th(scope="col") Cost(₹)
                                     th(scope="col") Customer name
                                     th(scope="col") Customer address
                                     th(scope="col") Order date
+                                    th(scope="col") Payment mode
                                     th(scope="col") Wareshouse
                                     th(scope="col") Shipdate
                                     th(scope="col") Dispatch
@@ -137,6 +147,7 @@ html
                                             td #{order.customer}
                                             td #{order.address}
                                             td #{order.odate}
+                                            td #{order.mode}
                                             td
                                                 label(class="mr-sm-2", for="inlineFormCustomSelect")
                                                     select(name="w_id", class="custom-select mr-sm-2", id="inlineFormCustomSelect")
