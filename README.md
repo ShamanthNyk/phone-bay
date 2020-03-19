@@ -37,7 +37,7 @@ user@machine:~$ ./populate.sh
 
 <strong>Done!</strong>
 
-You can start playing with it
+<strong>In web browser url search type ' localhost:8080', start playing with it</strong>
 ```console
 user@machine:~$ cd phone-bay
 user@machine:~$ node server.js 
