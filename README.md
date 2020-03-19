@@ -1,6 +1,6 @@
 # phone-bay
 
-<strong>Setup mysql server, set root password</strong>
+<strong>Setup mysql server, and set root password</strong>
 ```console
 user@machine:~$ sudo apt-get install mysql-server
 user@machine:~$ sudo mysql_secure_installation
@@ -11,7 +11,7 @@ user@machine:~$ sudo mysql_secure_installation
 user@machine:~$ git clone https://github.com/vi88i/phone-bay.git
 ```
 
-<strong>Run setup_SQL.sh in sql folder, this will setup database and all tables, TSQL & PL/SQL</strong>
+<strong>Run setup_SQL.sh in sql folder, this will setup database, all tables, TSQL & PL/SQL</strong>
 ```console
 user@machine:~$ cd phone-bay/sql
 user@machine:~$ chmod +x setup_SQL.sh 
@@ -40,7 +40,7 @@ user@machine:~$ cd phone-bay
 user@machine:~$ node server.js 
 ```
 
-<light>Sorry for bad front-end :)</light>
+<i>Sorry for bad front-end :)</i>
 
 
 
