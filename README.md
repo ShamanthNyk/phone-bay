@@ -4,7 +4,6 @@
 ```console
 user@machine:~$ sudo apt update
 user@machine:~$ sudo apt install nodejs
-user@machine:~$ sudo apt install nodejs
 user@machine:~$ sudo apt install npm
 ```
 
