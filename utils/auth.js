@@ -3,10 +3,6 @@ const mysql = require('mysql');
 const bodyParser = require('body-parser');
 const path = require('path');
 const app = express();
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
 const db = require('../utils/db');
 const config = require('../public/global/config')
 

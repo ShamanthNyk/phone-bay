@@ -1,4 +1,5 @@
 -- check if duplicate user exists while sign up
+DROP PROCEDURE IF EXISTS CHECK_FOR_DUPLICATE_USER;
 DELIMITER $$
 CREATE PROCEDURE CHECK_FOR_DUPLICATE_USER(IN uname varchar(100), IN acc_type varchar(10), OUT found INT)
 BEGIN
@@ -15,6 +16,7 @@ END $$
 DELIMITER ;
 
 -- add new user depending on user type
+DROP PROCEDURE IF EXISTS ADD_NEW_USER;
 DELIMITER $$
 CREATE PROCEDURE ADD_NEW_USER (
     IN uname varchar(100),
@@ -42,6 +44,7 @@ END $$
 DELIMITER ;
 
 -- login verification
+DROP PROCEDURE IF EXISTS LOGIN_VERIFICATION;
 DELIMITER $$
 CREATE PROCEDURE LOGIN_VERIFICATION(
     IN uname varchar(100), 
@@ -63,6 +66,7 @@ END $$
 DELIMITER ;
 
 -- insert new product
+DROP PROCEDURE IF EXISTS INSERT_NEW_PRODUCT;
 DELIMITER $$
 CREATE PROCEDURE INSERT_NEW_PRODUCT(
     IN title varchar(100), 
@@ -91,6 +95,7 @@ END $$
 DELIMITER ;
 
 -- add to cart
+DROP PROCEDURE IF EXISTS ADD_TO_CART;
 DELIMITER $$
 CREATE PROCEDURE ADD_TO_CART(
     IN uname varchar(100), 
@@ -108,6 +113,7 @@ END $$
 DELIMITER ;
 
 -- retrieve cart items for one customer
+DROP PROCEDURE IF EXISTS GET_CART;
 DELIMITER $$
 CREATE PROCEDURE GET_CART(
     IN uname varchar(100)
@@ -126,8 +132,8 @@ END $$
 DELIMITER ;
 
 -- util which matches username to trader/customer id
+DROP FUNCTION IF EXISTS MAP_USERNAME_TO_ID;
 DELIMITER $$
- 
 CREATE FUNCTION MAP_USERNAME_TO_ID(
     uname varchar(100),
     acc_type varchar(10)
@@ -150,7 +156,7 @@ END $$
 DELIMITER ;
 
 -- place orders for items in cart
-DROP PROCEDURE PLACE_ORDER;
+DROP PROCEDURE IF EXISTS PLACE_ORDER;
 DELIMITER $$
 CREATE PROCEDURE PLACE_ORDER(
     IN _cust_id INT,
@@ -188,7 +194,7 @@ END $$
 DELIMITER ;
 
 -- buy now, also it should remove the same item from customer's cart
-DROP PROCEDURE BUY_NOW;
+DROP PROCEDURE IF EXISTS BUY_NOW;
 DELIMITER $$
 CREATE PROCEDURE BUY_NOW(
     IN _cust_id INT,
@@ -211,9 +217,8 @@ END $$
 DELIMITER ;
 
 -- update buys after placing order
-DROP TRIGGER UPDATE_BUYS_ORDER;
+DROP TRIGGER IF EXISTS UPDATE_BUYS_ORDER;
 DELIMITER $$
- 
 CREATE TRIGGER UPDATE_BUYS_ORDER
 AFTER INSERT ON ORDERS
 FOR EACH ROW
@@ -226,9 +231,8 @@ END $$
 DELIMITER ;
 
 -- make sure shipdate is valid
-DROP TRIGGER CHECK_SHIPDATE;
+DROP TRIGGER IF EXISTS CHECK_SHIPDATE;
 DELIMITER $$
- 
 CREATE TRIGGER CHECK_SHIPDATE
 BEFORE INSERT ON SHIPMENT
 FOR EACH ROW
@@ -245,3 +249,4 @@ END $$
  
 DELIMITER ;
 
+exit

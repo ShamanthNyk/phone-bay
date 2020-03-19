@@ -68,3 +68,5 @@ insert into WAREHOUSE
 values(4,'Delhi');
 insert into WAREHOUSE
 values(5,'Kolkata');
+
+exit

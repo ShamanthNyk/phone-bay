@@ -1,23 +1,20 @@
-const PORT = 8080;
-
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const mysql = require('mysql');
 const bodyParser = require('body-parser');
 const session = require('express-session');
+const config = require('./public/global/config')
 const app = express();
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, '/')));  // setting reference directory for assets and static files
+app.use(express.static(path.join(__dirname, '/')));
 
-app.listen(PORT, '127.0.0.1', function () {
-    console.log('Listening on ' + PORT);
+app.listen(config.port, '127.0.0.1', function () {
+    console.log('Listening on ' + config.port);
 });
 
 // handle session
