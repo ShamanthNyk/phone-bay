@@ -55,6 +55,11 @@ Logs page
 Trader home page
 <img src="./public/assets/trader-home.png" style="height: 480px; width:640px;"><br>
 
+Collaborators:
+  * Vishruth Kumar 
+  * Varsha Nair 
+  * Shamanth R Nayak 
+
 <i>Sorry for bad front-end :)</i>
 
 
