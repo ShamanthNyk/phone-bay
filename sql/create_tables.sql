@@ -40,7 +40,7 @@ CREATE TABLE PRODUCT (
     pimg varchar(8000) NOT NULL,
     brand varchar(30) NOT NULL,
     buys INT DEFAULT 0,
-    PRIMARY KEY (product_id, title),
+    PRIMARY KEY (product_id),
     FOREIGN KEY (trader_id) REFERENCES TRADER (trader_id)
 );
 
