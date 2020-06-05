@@ -1,4 +1,4 @@
-# phone-bay
+# Phone-bay
 
 <strong>Install node js and npm</strong>
 ```console
